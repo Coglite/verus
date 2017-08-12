@@ -2,3 +2,5 @@ node_modules/
 *.js
 *.map.js
 yarn.lock
+dist/
+*.log

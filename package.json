@@ -1,11 +1,16 @@
 {
   "name": "verus",
-  "version": "0.0.1",
+  "version": "0.0.8",
   "description": "Object schema validator",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "author": "Joni Katajamäki <joni.katajamaki@gmail.com>",
   "license": "MIT",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
+    "build": "tsc",
     "test": "jest --watch",
     "test-once": "jest"
   },

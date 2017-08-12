@@ -1,9 +1,72 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ArrayOf should fail if some values are invalid 1`] = `
+Object {
+  "errors": Object {
+    "invalidIndices": Array [
+      Array [
+        1,
+        Object {
+          "expectedFormat": "ISO 8601 date",
+          "type": "parse",
+          "value": "2015-06lasdkjflöakjsdfölkja",
+        },
+      ],
+      Array [
+        3,
+        Object {
+          "expectedFormat": "ISO 8601 date",
+          "type": "parse",
+          "value": "2015-06lasdka",
+        },
+      ],
+    ],
+    "type": "array",
+  },
+  "result": "invalid",
+}
+`;
+
+exports[`ArrayOf should fail on non-array value 1`] = `
+Object {
+  "errors": Object {
+    "actual": "number",
+    "expected": "array",
+    "type": "type",
+  },
+  "result": "invalid",
+}
+`;
+
+exports[`ArrayOf should transform values to a new array 1`] = `
+Object {
+  "result": "valid",
+  "value": Array [
+    2007-04-05T16:30:00.000Z,
+    2008-04-05T16:30:00.000Z,
+    2009-04-05T16:30:00.000Z,
+    2010-11-05T16:30:00.000Z,
+  ],
+}
+`;
+
+exports[`ArrayOf should validate an array of strings 1`] = `
+Object {
+  "result": "valid",
+  "value": Array [
+    "foo",
+    "bar",
+    "baz",
+  ],
+}
+`;
+
 exports[`ISODate should not allow invalid dates 1`] = `
 Object {
   "errors": Object {
-    "right": " is not a valid Date",
+    "expectedFormat": "ISO 8601 date",
+    "type": "parse",
+    "value": "qwerqwerqwer",
   },
   "result": "invalid",
 }
@@ -12,7 +75,9 @@ Object {
 exports[`ISODate should not allow non-string values 1`] = `
 Object {
   "errors": Object {
-    "left": " was not string, but number",
+    "actual": "number",
+    "expected": "string",
+    "type": "type",
   },
   "result": "invalid",
 }
@@ -28,7 +93,14 @@ Object {
 exports[`Shape should detect invalid simple shape 1`] = `
 Object {
   "errors": Object {
-    "name": " was not string, but number",
+    "fields": Object {
+      "name": Object {
+        "actual": "number",
+        "expected": "string",
+        "type": "type",
+      },
+    },
+    "type": "shape",
   },
   "result": "invalid",
 }
@@ -37,7 +109,11 @@ Object {
 exports[`Shape should optionally not allow extra fields in value 1`] = `
 Object {
   "errors": Object {
-    "dogs": " with type array not defined in shape",
+    "extra": Object {
+      "dogs": "array",
+    },
+    "fields": Object {},
+    "type": "shape",
   },
   "result": "invalid",
 }
@@ -55,8 +131,17 @@ Object {
 exports[`Shape should optionally not allow extra fields in value 3`] = `
 Object {
   "errors": Object {
-    "dogs": " with type array not defined in shape",
-    "name": " was not string, but number",
+    "extra": Object {
+      "dogs": "array",
+    },
+    "fields": Object {
+      "name": Object {
+        "actual": "number",
+        "expected": "string",
+        "type": "type",
+      },
+    },
+    "type": "shape",
   },
   "result": "invalid",
 }
