@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ISODate should not allow invalid dates 1`] = `
+Object {
+  "errors": Object {
+    "right": " is not a valid Date",
+  },
+  "result": "invalid",
+}
+`;
+
+exports[`ISODate should not allow non-string values 1`] = `
+Object {
+  "errors": Object {
+    "left": " was not string, but number",
+  },
+  "result": "invalid",
+}
+`;
+
+exports[`ISODate should parse ISO 8601 dates 1`] = `
+Object {
+  "result": "valid",
+  "value": 2007-04-05T16:30:00.000Z,
+}
+`;
+
+exports[`Shape should detect invalid simple shape 1`] = `
+Object {
+  "errors": Object {
+    "name": " was not string, but number",
+  },
+  "result": "invalid",
+}
+`;
+
+exports[`Shape should optionally not allow extra fields in value 1`] = `
+Object {
+  "errors": Object {
+    "dogs": " with type array not defined in shape",
+  },
+  "result": "invalid",
+}
+`;
+
+exports[`Shape should optionally not allow extra fields in value 2`] = `
+Object {
+  "result": "valid",
+  "value": Object {
+    "name": "Jane Smith",
+  },
+}
+`;
+
+exports[`Shape should optionally not allow extra fields in value 3`] = `
+Object {
+  "errors": Object {
+    "dogs": " with type array not defined in shape",
+    "name": " was not string, but number",
+  },
+  "result": "invalid",
+}
+`;
+
+exports[`Shape should validate simple shape 1`] = `
+Object {
+  "result": "valid",
+  "value": Object {
+    "dogs": Array [
+      "Fluffy",
+    ],
+    "name": "Jane Smith",
+  },
+}
+`;
