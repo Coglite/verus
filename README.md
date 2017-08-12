@@ -7,7 +7,7 @@ Verus is a TypeScript (and Javascript) library that can do both at the same time
 
 Example:
 
-```
+```typescript
 import { String, Shape, ISODate, ArrayOf, typeValue } from './index'
 
 export const user = Shape({
