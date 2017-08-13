@@ -1,4 +1,5 @@
 export * from './common'
+export * from './errors'
 export * from './array-of'
 export * from './fluent-validator'
 export * from './iso-date'

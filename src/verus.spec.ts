@@ -1,10 +1,12 @@
-import { String, Shape, FluentValidator, Number, ISODate, ArrayOf } from './index'
+import { String, FluentValidator, Number, ISODate, ArrayOf, typeValue, errorMessage } from './index'
+import { Shape } from './shape'
+import { Invalid } from "./common";
 
-const user = Shape({
+const user = Shape('User', {
     name: String
 })
 
-const noExtraUser = Shape({
+const noExtraUser = Shape('NoExtraUser', {
     name: String
 }, false)
 
@@ -109,6 +111,42 @@ describe('ArrayOf', () => {
         const r = await ArrayOf(ISODate).validate(42)
         expect(r).toMatchSnapshot()
     })
+})
 
+const Product = Shape('Product', {
+    name: String,
+    price: Number,
+})
 
+const Subscription = Shape('Subscription', {
+    name: String,
+    startDate: ISODate,
+    endDate: ISODate,
+    monthlyPrice: Number,
+})
+
+const Gift = Shape('Gift', {
+    name: String,
+    recipient: String,
+    price: Number
+})
+
+const Cart = Shape('Cart', {
+    created: ISODate,
+    items: ArrayOf(Product.or(Subscription).or(Gift))
+})
+
+describe('Error messages', () => {
+    it('should produce 3 lines of error messages', async () => {
+        const r = await Cart.validate({
+            created: '2009-04-05garbage',
+            items: [
+                { name: 'Candybar', price: '0.9' },
+                { name: 'Bread', price: 3.4 },
+                { name: 'DSL', date: '2009-04-05T14:30-02:00', endDate: '2010-02-05T14:30-02:00', monthlyPrice: 33.4 },
+            ]
+        })
+        expect(r.result).toBe('invalid')
+        expect((r as Invalid<any>).message).toMatchSnapshot()
+    })
 })

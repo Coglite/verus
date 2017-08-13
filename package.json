@@ -6,9 +6,6 @@
   "types": "./dist/index.d.ts",
   "author": "Joni Katajamäki <joni.katajamaki@gmail.com>",
   "license": "MIT",
-  "files": [
-    "dist/"
-  ],
   "scripts": {
     "build": "tsc",
     "test": "jest --watch",

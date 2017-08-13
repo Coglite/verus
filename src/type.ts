@@ -1,18 +1,16 @@
-import { Kind } from './common'
+import { Kind, invalid } from './common'
 import { FluentValidator } from './fluent-validator'
 import * as kindOf from 'kind-of'
 
 export const Type = <T>(name: string, typeName: Kind) => new FluentValidator<T>(name, async (value: any) => {
     const type = kindOf(value)
     if (type !== typeName) {
-        return {
-            result: 'invalid',
-            errors: {
-                type: 'type',
-                expected: typeName,
-                actual: type
-            }
-        }
+        return invalid({
+            type: 'type',
+            name,
+            expected: typeName,
+            actual: type,
+        })
     }
     return {
         result: 'valid',

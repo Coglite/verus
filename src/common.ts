@@ -1,8 +1,8 @@
 import * as kindOf from 'kind-of'
-import { Errors } from './errors'
+import { Errors, errorMessage } from './errors'
 
 export type Kind =
-      'undefined'
+    'undefined'
     | 'null'
     | 'boolean'
     | 'buffer'
@@ -38,9 +38,20 @@ export interface Valid<T> {
 export interface Invalid<T> {
     result: 'invalid'
     errors: Errors
+    message: string
 }
 
-export type ValidateResult<T> = Valid<T>|Invalid<T>
+export function invalid<T>(errors: Errors): Invalid<T> {
+    return {
+        result: 'invalid',
+        errors,
+        get message() {
+            return errorMessage(this.errors)
+        }
+    }
+}
+
+export type ValidateResult<T> = Valid<T> | Invalid<T>
 export type ValidateFn<T> = (value: any) => Promise<ValidateResult<T>>
 
 export interface Validator<T> {
@@ -51,14 +62,12 @@ export interface Validator<T> {
 export function expect(kind: Kind, value: any): ValidateResult<any> {
     const k = kindOf(value)
     if (k != kind) {
-        return {
-            result: 'invalid',
-            errors: {
-                type: 'type',
-                expected: kind,
-                actual: k
-            }
-        }
+        return invalid({
+            type: 'type',
+            name: 'expect',
+            expected: kind,
+            actual: k
+        })
     }
     return {
         result: 'valid',

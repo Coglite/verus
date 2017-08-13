@@ -1,5 +1,5 @@
 import { FluentValidator } from './fluent-validator'
-import { expect } from './common'
+import { expect, invalid } from './common'
 import * as parseDate from 'date-fns/parse'
 import * as isValidDate from 'date-fns/is_valid'
 
@@ -11,14 +11,11 @@ export const ISODate = new FluentValidator<Date>('ISODate', async value => {
 
     const date = parseDate(value)
     if (!isValidDate(date)) {
-        return {
-            result: 'invalid',
-            errors: {
-                type: 'parse',
-                expectedFormat: 'ISO 8601 date',
-                value: value as string
-            }
-        }
+        return invalid({
+            type: 'parse',
+            name: 'ISODate',
+            expectedFormat: 'ISO 8601 date',
+        })
     }
     return {
         result: 'valid',

@@ -1,9 +1,10 @@
 import { Validator, ValidateResult } from './common'
 import { FluentValidator } from './fluent-validator'
-import { expect } from './common'
+import { expect, invalid } from './common'
 import { Errors } from './errors'
 
 export function ArrayOf<T>(validator: Validator<T>): FluentValidator<T[]> {
+    const name = `ArrayOf<${validator.name}>`
     const v = async (value: any): Promise<ValidateResult<T[]>> => {
         const kindResult = expect('array', value)
         if (kindResult.result === 'invalid') {
@@ -14,7 +15,7 @@ export function ArrayOf<T>(validator: Validator<T>): FluentValidator<T[]> {
         const validatedArr: T[] = []
         const invalidIndices: [number, Errors][] = []
         for (let i = 0; i < arr.length; i++) {
-            const r = await  validator.validate(arr[i])
+            const r = await validator.validate(arr[i])
             if (r.result === 'invalid') {
                 invalidIndices.push([i, r.errors])
             } else if (invalidIndices.length === 0) {
@@ -22,13 +23,11 @@ export function ArrayOf<T>(validator: Validator<T>): FluentValidator<T[]> {
             }
         }
         if (invalidIndices.length > 0) {
-            return {
-                result: 'invalid',
-                errors: {
-                    type: 'array',
-                    invalidIndices
-                }
-            }
+            return invalid({
+                name,
+                type: 'array',
+                invalidIndices
+            })
         }
         return {
             result: 'valid',
@@ -36,5 +35,5 @@ export function ArrayOf<T>(validator: Validator<T>): FluentValidator<T[]> {
         }
     }
 
-    return new FluentValidator<T[]>('ArrayOf', v)
+    return new FluentValidator<T[]>(name, v)
 }

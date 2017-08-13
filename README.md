@@ -27,10 +27,16 @@ export type User = typeof userTypeValue
 // type User = { name: string, birthdate: Date, email: string, kids: string[] }
 
 // Using the validator is simple:
+const userJson = {
+    name: 'Joan Smith',
+    birthdate: '1986-11-05T14:30-02:00',
+    email: 'joan.smith@protonmail.ch',
+    kids: ['Jack', 'Jill']
+}
 
-const response = await restApi.get('/user/42')
-if (user.validate(response).result === 'valid') {
-    ...
+const validation = user.validate(userJson)
+if (validation.result === 'valid') {
+    doStuffWithUser(validation.value)
 }
 ```
 

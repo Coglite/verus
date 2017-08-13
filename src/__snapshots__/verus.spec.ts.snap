@@ -8,21 +8,25 @@ Object {
         1,
         Object {
           "expectedFormat": "ISO 8601 date",
+          "name": "ISODate",
           "type": "parse",
-          "value": "2015-06lasdkjflöakjsdfölkja",
         },
       ],
       Array [
         3,
         Object {
           "expectedFormat": "ISO 8601 date",
+          "name": "ISODate",
           "type": "parse",
-          "value": "2015-06lasdka",
         },
       ],
     ],
+    "name": "ArrayOf<ISODate>",
     "type": "array",
   },
+  "message": "[1] did not match 'ISO 8601 date'-format
+[3] did not match 'ISO 8601 date'-format
+",
   "result": "invalid",
 }
 `;
@@ -32,8 +36,11 @@ Object {
   "errors": Object {
     "actual": "number",
     "expected": "array",
+    "name": "expect",
     "type": "type",
   },
+  "message": "value is the wrong type, expected array, got number
+",
   "result": "invalid",
 }
 `;
@@ -61,13 +68,22 @@ Object {
 }
 `;
 
+exports[`Error messages should produce 3 lines of error messages 1`] = `
+"Cart.created did not match 'ISO 8601 date'-format
+Cart.items[0] failed all validators: Shape(Product) | Shape(Subscription) | Shape(Gift)
+Cart.items[2] failed all validators: Shape(Product) | Shape(Subscription) | Shape(Gift)
+"
+`;
+
 exports[`ISODate should not allow invalid dates 1`] = `
 Object {
   "errors": Object {
     "expectedFormat": "ISO 8601 date",
+    "name": "ISODate",
     "type": "parse",
-    "value": "qwerqwerqwer",
   },
+  "message": "value did not match 'ISO 8601 date'-format
+",
   "result": "invalid",
 }
 `;
@@ -77,8 +93,11 @@ Object {
   "errors": Object {
     "actual": "number",
     "expected": "string",
+    "name": "expect",
     "type": "type",
   },
+  "message": "value is the wrong type, expected string, got number
+",
   "result": "invalid",
 }
 `;
@@ -97,11 +116,16 @@ Object {
       "name": Object {
         "actual": "number",
         "expected": "string",
+        "name": "String",
         "type": "type",
       },
     },
+    "name": "Shape",
+    "shapeName": "User",
     "type": "shape",
   },
+  "message": "User.name is the wrong type, expected string, got number
+",
   "result": "invalid",
 }
 `;
@@ -113,8 +137,12 @@ Object {
       "dogs": "array",
     },
     "fields": Object {},
+    "name": "Shape",
+    "shapeName": "NoExtraUser",
     "type": "shape",
   },
+  "message": "NoExtraUser.dogs is an unexpected field with type array
+",
   "result": "invalid",
 }
 `;
@@ -138,11 +166,17 @@ Object {
       "name": Object {
         "actual": "number",
         "expected": "string",
+        "name": "String",
         "type": "type",
       },
     },
+    "name": "Shape",
+    "shapeName": "NoExtraUser",
     "type": "shape",
   },
+  "message": "NoExtraUser.name is the wrong type, expected string, got number
+NoExtraUser.dogs is an unexpected field with type array
+",
   "result": "invalid",
 }
 `;
