@@ -10,7 +10,7 @@ Example:
 ```typescript
 import { String, Shape, ISODate, ArrayOf, typeValue } from 'verus'
 
-export const user = Shape({
+export const User = Shape({
     name: String,
     birthdate: ISODate,
     email: String,
@@ -34,7 +34,7 @@ const userJson = {
     kids: ['Jack', 'Jill']
 }
 
-const validation = user.validate(userJson)
+const validation = User.validate(userJson)
 if (validation.result === 'valid') {
     doStuffWithUser(validation.value)
 }
