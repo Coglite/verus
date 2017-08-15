@@ -1,43 +1,44 @@
 import { String, FluentValidator, Number, ISODate, ArrayOf, typeValue, errorMessage } from './index'
 import { Shape } from './shape'
-import { Invalid } from "./common";
+import { Invalid } from './common'
+import { Union } from './union'
 
-const user = Shape('User', {
+class User extends Shape({
     name: String
-})
+}) {}
 
-const noExtraUser = Shape('NoExtraUser', {
+class NoExtraUser extends Shape({
     name: String
-}, false)
+}, false) {}
 
 const IsMock = () =>
-    new FluentValidator<any>('Mock', jest.fn(value => ({ result: 'valid', value }))) as FluentValidator<any> & {validate: typeof jest}
+    new FluentValidator<any>('Mock', jest.fn(value => ({ valid: true, value }))) as FluentValidator<any> & {validate: typeof jest}
 
 describe('Shape', () => {
     it('should validate simple shape', async () => {
-        const result = await user.validate({ name: 'Jane Smith', dogs: ['Fluffy'] })
+        const result = await User.validate({ name: 'Jane Smith', dogs: ['Fluffy'] })
         expect(result).toMatchSnapshot()
     })
 
     it('should detect invalid simple shape', async () => {
-        const result = await user.validate({ name: 234, dogs: ['Fluffy'] })
+        const result = await User.validate({ name: 234, dogs: ['Fluffy'] })
         expect(result).toMatchSnapshot()
     })
 
     it('should optionally not allow extra fields in value', async () => {
-        let result = await noExtraUser.validate({
+        let result = await NoExtraUser.validate({
             name: 'Jane Smith',
             dogs: ['Fluffy']
         })
         expect(result).toMatchSnapshot()
 
-        result = await noExtraUser.validate({
+        result = await NoExtraUser.validate({
             name: 'Jane Smith'
         })
 
         expect(result).toMatchSnapshot()
 
-        result = await noExtraUser.validate({
+        result = await NoExtraUser.validate({
             name: 123,
             dogs: ['Snuffles']
         })
@@ -50,16 +51,16 @@ describe('FluentValidator', () => {
     it('should not evaluate the right side if left side fails', async () => {
         const m = IsMock()
         const stringAndMock = String.and(m)
-        const {result} = await stringAndMock.validate(231)
-        expect(result).toBe('invalid')
+        const {valid} = await stringAndMock.validate(231)
+        expect(valid).toBe(false)
         expect(m.validate).toHaveBeenCalledTimes(0)
     })
 
     it('should evaluate both conditions if left side is valid', async () => {
         const m = IsMock()
         const stringAndMock = String.and(m)
-        const {result} = await stringAndMock.validate('foobar')
-        expect(result).toBe('valid')
+        const {valid} = await stringAndMock.validate('foobar')
+        expect(valid).toBe(true)
         expect(m.validate).toHaveBeenCalledTimes(1)
     })
 })
@@ -113,28 +114,66 @@ describe('ArrayOf', () => {
     })
 })
 
-const Product = Shape('Product', {
-    name: String,
-    price: Number,
+describe('String', () => {
+    it('should not validate if value is not string', async () => {
+        const r = await String.validate(2313)
+        expect(r).toMatchSnapshot()
+    })
+    it('should validate if length > minLength', async () => {
+        const r = await String.minLength(4).validate('qwerty')
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should validate if length < maxLength', async () => {
+        const r = await String.maxLength(4).validate('qwe')
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should fail if length < minLength', async () => {
+        const r = await String.minLength(4).validate('qwe')
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should fail if length > maxLength', async () => {
+        const r = await String.maxLength(3).validate('qwer')
+        expect(r).toMatchSnapshot()
+    })
 })
 
-const Subscription = Shape('Subscription', {
+describe('Union', () => {
+    it('should match valid value', async () => {
+        const r = await Union('a', 'b').validate('b')
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should not match invalid value', async () => {
+        const r = await Union('a', 'b', 'c').validate('d')
+        expect(r).toMatchSnapshot()
+    })
+})
+
+class Product extends Shape({
+    name: String,
+    price: Number,
+}) {}
+
+class Subscription extends Shape({
     name: String,
     startDate: ISODate,
     endDate: ISODate,
     monthlyPrice: Number,
-})
+}) {}
 
-const Gift = Shape('Gift', {
+class Gift extends Shape({
     name: String,
     recipient: String,
-    price: Number
-})
+    price: Number,
+}) {}
 
-const Cart = Shape('Cart', {
+class Cart extends Shape({
     created: ISODate,
     items: ArrayOf(Product.or(Subscription).or(Gift))
-})
+}) {}
 
 describe('Error messages', () => {
     it('should produce 3 lines of error messages', async () => {
@@ -146,7 +185,7 @@ describe('Error messages', () => {
                 { name: 'DSL', date: '2009-04-05T14:30-02:00', endDate: '2010-02-05T14:30-02:00', monthlyPrice: 33.4 },
             ]
         })
-        expect(r.result).toBe('invalid')
+        expect(r.valid).toBe(false)
         expect((r as Invalid<any>).message).toMatchSnapshot()
     })
 })

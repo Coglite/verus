@@ -27,7 +27,7 @@ Object {
   "message": "[1] did not match 'ISO 8601 date'-format
 [3] did not match 'ISO 8601 date'-format
 ",
-  "result": "invalid",
+  "valid": false,
 }
 `;
 
@@ -41,13 +41,13 @@ Object {
   },
   "message": "value is the wrong type, expected array, got number
 ",
-  "result": "invalid",
+  "valid": false,
 }
 `;
 
 exports[`ArrayOf should transform values to a new array 1`] = `
 Object {
-  "result": "valid",
+  "valid": true,
   "value": Array [
     2007-04-05T16:30:00.000Z,
     2008-04-05T16:30:00.000Z,
@@ -59,7 +59,7 @@ Object {
 
 exports[`ArrayOf should validate an array of strings 1`] = `
 Object {
-  "result": "valid",
+  "valid": true,
   "value": Array [
     "foo",
     "bar",
@@ -70,8 +70,8 @@ Object {
 
 exports[`Error messages should produce 3 lines of error messages 1`] = `
 "Cart.created did not match 'ISO 8601 date'-format
-Cart.items[0] failed all validators: Shape(Product) | Shape(Subscription) | Shape(Gift)
-Cart.items[2] failed all validators: Shape(Product) | Shape(Subscription) | Shape(Gift)
+Cart.items[0] failed all validators: Product | Subscription | Gift
+Cart.items[2] failed all validators: Product | Subscription | Gift
 "
 `;
 
@@ -84,7 +84,7 @@ Object {
   },
   "message": "value did not match 'ISO 8601 date'-format
 ",
-  "result": "invalid",
+  "valid": false,
 }
 `;
 
@@ -98,13 +98,13 @@ Object {
   },
   "message": "value is the wrong type, expected string, got number
 ",
-  "result": "invalid",
+  "valid": false,
 }
 `;
 
 exports[`ISODate should parse ISO 8601 dates 1`] = `
 Object {
-  "result": "valid",
+  "valid": true,
   "value": 2007-04-05T16:30:00.000Z,
 }
 `;
@@ -126,7 +126,7 @@ Object {
   },
   "message": "User.name is the wrong type, expected string, got number
 ",
-  "result": "invalid",
+  "valid": false,
 }
 `;
 
@@ -143,14 +143,14 @@ Object {
   },
   "message": "NoExtraUser.dogs is an unexpected field with type array
 ",
-  "result": "invalid",
+  "valid": false,
 }
 `;
 
 exports[`Shape should optionally not allow extra fields in value 2`] = `
 Object {
-  "result": "valid",
-  "value": Object {
+  "valid": true,
+  "value": NoExtraUser {
     "name": "Jane Smith",
   },
 }
@@ -177,18 +177,91 @@ Object {
   "message": "NoExtraUser.name is the wrong type, expected string, got number
 NoExtraUser.dogs is an unexpected field with type array
 ",
-  "result": "invalid",
+  "valid": false,
 }
 `;
 
 exports[`Shape should validate simple shape 1`] = `
 Object {
-  "result": "valid",
-  "value": Object {
+  "valid": true,
+  "value": User {
     "dogs": Array [
       "Fluffy",
     ],
     "name": "Jane Smith",
   },
+}
+`;
+
+exports[`String should fail if length < minLength 1`] = `
+Object {
+  "errors": Object {
+    "length": 3,
+    "minLength": 4,
+    "type": "length",
+  },
+  "message": "value is too short, min length is 4, was 3
+",
+  "valid": false,
+}
+`;
+
+exports[`String should fail if length > maxLength 1`] = `
+Object {
+  "errors": Object {
+    "length": 4,
+    "maxLength": 3,
+    "type": "length",
+  },
+  "message": "value is too long, max length is 3, was 4
+",
+  "valid": false,
+}
+`;
+
+exports[`String should not validate if value is not string 1`] = `
+Object {
+  "errors": Object {
+    "actual": "number",
+    "expected": "string",
+    "name": "String",
+    "type": "type",
+  },
+  "message": "value is the wrong type, expected string, got number
+",
+  "valid": false,
+}
+`;
+
+exports[`String should validate if length < maxLength 1`] = `
+Object {
+  "valid": true,
+  "value": "qwe",
+}
+`;
+
+exports[`String should validate if length > minLength 1`] = `
+Object {
+  "valid": true,
+  "value": "qwerty",
+}
+`;
+
+exports[`Union should match valid value 1`] = `
+Object {
+  "valid": true,
+  "value": "b",
+}
+`;
+
+exports[`Union should not match invalid value 1`] = `
+Object {
+  "errors": Object {
+    "name": "Union(a|b|c)",
+    "type": "union",
+  },
+  "message": "value did not match union Union(a|b|c)
+",
+  "valid": false,
 }
 `;

@@ -5,6 +5,14 @@ export type Errors =
     | TypeError
     | ArrayErrors
     | ParseError
+    | UnionError
+    | ValueError
+    | LengthError
+
+export interface ValueError {
+    type: 'value'
+    expected: string
+}
 
 export interface AndError {
     type: 'and'
@@ -45,6 +53,18 @@ export interface ParseError {
     type: 'parse'
     name: string
     expectedFormat: string
+}
+
+export interface UnionError {
+    type: 'union'
+    name: string
+}
+
+export interface LengthError {
+    type: 'length'
+    length: number
+    minLength?: number
+    maxLength?: number
 }
 
 export function errorMessage(errors: Errors): string {
@@ -93,6 +113,17 @@ function* buildErrorMessage(path: string[], errors: Errors): IterableIterator<st
             for (const [idx, error] of errors.invalidIndices) {
                 yield* iterableToArray(buildErrorMessage(path.concat([`[${idx}]`]), error))
             }
+            break
+        case 'length':
+            if (errors.maxLength) {
+                yield `${p} is too long, max length is ${errors.maxLength}, was ${errors.length}`
+            }
+            if (errors.minLength) {
+                yield `${p} is too short, min length is ${errors.minLength}, was ${errors.length}`
+            }
+            break
+        case 'union':
+            yield `${p} did not match union ${errors.name}`
             break
     }
 }

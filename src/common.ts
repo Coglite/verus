@@ -31,23 +31,30 @@ export type Kind =
     | 'float64array'
 
 export interface Valid<T> {
-    result: 'valid'
+    valid: true
     value: T
 }
 
 export interface Invalid<T> {
-    result: 'invalid'
+    valid: false
     errors: Errors
     message: string
 }
 
 export function invalid<T>(errors: Errors): Invalid<T> {
     return {
-        result: 'invalid',
+        valid: false,
         errors,
         get message() {
             return errorMessage(this.errors)
         }
+    }
+}
+
+export function valid<T>(value: T): Valid<T> {
+    return {
+        valid: true,
+        value
     }
 }
 
@@ -57,6 +64,8 @@ export type ValidateFn<T> = (value: any) => Promise<ValidateResult<T>>
 export interface Validator<T> {
     name: string;
     validate(value: any): Promise<ValidateResult<T>>
+    or<U>(validator: Validator<U>): Validator<T|U>
+    and<U>(validator: Validator<U>): Validator<T&U>
 }
 
 export function expect(kind: Kind, value: any): ValidateResult<any> {
@@ -69,10 +78,7 @@ export function expect(kind: Kind, value: any): ValidateResult<any> {
             actual: k
         })
     }
-    return {
-        result: 'valid',
-        value
-    }
+    return valid(value)
 }
 
 export function typeValue<T>(v: Validator<T>): T {

@@ -1,4 +1,4 @@
-import { Validator, ValidateFn, ValidateResult, invalid } from './common'
+import { Validator, ValidateFn, ValidateResult, invalid, valid } from './common'
 
 export class FluentValidator<T> implements Validator<T> {
     constructor(
@@ -9,13 +9,10 @@ export class FluentValidator<T> implements Validator<T> {
         const name = `${this.name} & ${other.name}`
         const v = async (value: any): Promise<ValidateResult<T & U>> => {
             const ra = await this.validate(value)
-            if (ra.result === 'valid') {
+            if (ra.valid) {
                 const rb = await other.validate(ra.value)
-                if (rb.result === 'valid') {
-                    return {
-                        result: 'valid',
-                        value: rb.value as T & U
-                    }
+                if (rb.valid) {
+                    return valid(rb.value as T&U)
                 } else {
                     return invalid({
                         type: 'and',
@@ -39,11 +36,11 @@ export class FluentValidator<T> implements Validator<T> {
         const name = `${this.name} | ${other.name}`
         const v = async (value: any): Promise<ValidateResult<T | U>> => {
             const ra = await this.validate(value)
-            if (ra.result === 'valid') {
+            if (ra.valid) {
                 return ra as ValidateResult<T | U>
             } else {
                 const rb = await other.validate(value)
-                if (rb.result === 'invalid') {
+                if (!rb.valid) {
                     return invalid({
                         type: 'or',
                         name,
@@ -56,5 +53,9 @@ export class FluentValidator<T> implements Validator<T> {
         }
 
         return new FluentValidator<T | U>(name, v)
+    }
+
+    get typeValue(): T {
+        return undefined as any
     }
 }

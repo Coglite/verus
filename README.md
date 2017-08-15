@@ -10,27 +10,20 @@ Example:
 ```typescript
 import { String, Shape, ISODate, ArrayOf, typeValue } from 'verus'
 
-export const User = Shape({
+// typeof User = { name: string, birthdate: Date, employment: 'employee'|'worker'|'self-employed', email: string, kids: string[] }
+export class User extends Shape({
     name: String,
     birthdate: ISODate,
     email: String,
+    employment: Union('employee', 'worker', 'self-employed')
     kids: ArrayOf(String)
-})
+}) {}
 
-// typeof only works with values currently, so we cheat by
-// using this helper function to get a value with the type of the validator.
-// Actual runtime value is undefined, so never export or use this!
-const userTypeValue = typeValue(User)
-
-// And now we can get the type of the value
-export type User = typeof userTypeValue
-// type User = { name: string, birthdate: Date, email: string, kids: string[] }
-
-// Using the validator is simple:
 const userJson = {
     name: 'Joan Smith',
     birthdate: '1986-11-05T14:30-02:00',
     email: 'joan.smith@protonmail.ch',
+    employment: 'employee'
     kids: ['Jack', 'Jill']
 }
 
