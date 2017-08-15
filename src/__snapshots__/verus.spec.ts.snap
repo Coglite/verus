@@ -68,6 +68,25 @@ Object {
 }
 `;
 
+exports[`Async should fail on invalid value 1`] = `
+Object {
+  "errors": Object {
+    "message": "is invalid!",
+    "type": "async",
+  },
+  "message": "value failed async validation: \\"is invalid!\\"
+",
+  "valid": false,
+}
+`;
+
+exports[`Async should succeed on valid value 1`] = `
+Object {
+  "valid": true,
+  "value": true,
+}
+`;
+
 exports[`Error messages should produce 3 lines of error messages 1`] = `
 "Cart.created did not match 'ISO 8601 date'-format
 Cart.items[0] failed all validators: Product | Subscription | Gift

@@ -2,6 +2,7 @@ import { String, FluentValidator, Number, ISODate, ArrayOf, typeValue, errorMess
 import { Shape } from './shape'
 import { Invalid } from './common'
 import { Union } from './union'
+import { Async } from './async'
 
 class User extends Shape({
     name: String
@@ -148,6 +149,20 @@ describe('Union', () => {
 
     it('should not match invalid value', async () => {
         const r = await Union('a', 'b', 'c').validate('d')
+        expect(r).toMatchSnapshot()
+    })
+})
+
+describe('Async', () => {
+    it('should succeed on valid value', async () => {
+        const asyncBool = Async(async value => true)
+        const r = await asyncBool.validate('')
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should fail on invalid value', async () => {
+        const asyncBool = Async(async value => { throw 'is invalid!' })
+        const r = await asyncBool.validate('')
         expect(r).toMatchSnapshot()
     })
 })

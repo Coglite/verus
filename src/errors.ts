@@ -8,6 +8,7 @@ export type Errors =
     | UnionError
     | ValueError
     | LengthError
+    | AsyncError
 
 export interface ValueError {
     type: 'value'
@@ -67,6 +68,11 @@ export interface LengthError {
     maxLength?: number
 }
 
+export interface AsyncError {
+    type: 'async'
+    message: string
+}
+
 export function errorMessage(errors: Errors): string {
     return joinLines(buildErrorMessage([], errors))
 }
@@ -124,6 +130,9 @@ function* buildErrorMessage(path: string[], errors: Errors): IterableIterator<st
             break
         case 'union':
             yield `${p} did not match union ${errors.name}`
+            break
+        case 'async':
+            yield `${p} failed async validation: "${errors.message}"`
             break
     }
 }
