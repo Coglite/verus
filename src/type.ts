@@ -43,12 +43,14 @@ export class StringValidator extends FluentValidator<string> {
             if (this.options.minLength && s.length < this.options.minLength) {
                 return invalid({
                     type: 'length',
+                    name: 'String',
                     length: s.length,
                     minLength: options.minLength
                 })
             } else if (this.options.maxLength && s.length > this.options.maxLength) {
                 return invalid({
                     type: 'length',
+                    name: 'String',
                     length: s.length,
                     maxLength: options.maxLength
                 })
