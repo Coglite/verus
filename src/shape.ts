@@ -1,8 +1,8 @@
 import { Validator, ValidateResult, ValidateFn, invalid, valid } from './common'
 import { String, Number } from './type'
-import { ShapeErrors } from "./errors";
+import { ShapeErrors } from './errors'
 import * as kindOf from 'kind-of'
-import { FluentValidator } from "./fluent-validator";
+import { FluentValidator } from './fluent-validator'
 
 export type ShapeFields<T> = {
     [P in keyof T]: Validator<T[P]>
