@@ -3,6 +3,7 @@ import { Shape } from './shape'
 import { Invalid } from './common'
 import { Union } from './union'
 import { Async } from './async'
+import { Dict } from './dict'
 
 class User extends Shape({
     name: String
@@ -163,6 +164,28 @@ describe('Async', () => {
     it('should fail on invalid value', async () => {
         const asyncBool = Async(async value => { throw 'is invalid!' })
         const r = await asyncBool.validate('')
+        expect(r).toMatchSnapshot()
+    })
+})
+
+describe('Dict', () => {
+    it('should succeed on valid value', async () => {
+        const stringDict = Dict(Number)
+        const r = await stringDict.validate({
+            hello: 324,
+            world: 123
+        })
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should fail on invalid values', async () => {
+        const stringDict = Dict(Number)
+        const r = await stringDict.validate({
+            hello: 324,
+            world: 'qwer',
+            foo: 435,
+            bar: new Date()
+        })
         expect(r).toMatchSnapshot()
     })
 })

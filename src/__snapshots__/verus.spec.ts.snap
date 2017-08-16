@@ -87,6 +87,41 @@ Object {
 }
 `;
 
+exports[`Dict should fail on invalid values 1`] = `
+Object {
+  "errors": Object {
+    "fields": Object {
+      "bar": Object {
+        "actual": "date",
+        "expected": "number",
+        "name": "Number",
+        "type": "type",
+      },
+      "world": Object {
+        "actual": "string",
+        "expected": "number",
+        "name": "Number",
+        "type": "type",
+      },
+    },
+    "name": "Dict(Number)",
+    "type": "dict",
+  },
+  "message": "",
+  "valid": false,
+}
+`;
+
+exports[`Dict should succeed on valid value 1`] = `
+Object {
+  "valid": true,
+  "value": Object {
+    "hello": 324,
+    "world": 123,
+  },
+}
+`;
+
 exports[`Error messages should produce 3 lines of error messages 1`] = `
 "Cart.created did not match 'ISO 8601 date'-format
 Cart.items[0] failed all validators: Product | Subscription | Gift
