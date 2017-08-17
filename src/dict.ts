@@ -3,9 +3,13 @@ import { Validator, invalid, valid } from './common'
 import * as kindOf from 'kind-of'
 import { DictError } from './errors'
 
+export interface Dict<T> {
+    [key: string]: T
+}
+
 export const Dict = <T>(validator: Validator<T>) => {
     const name = `Dict(${validator.name})`
-    return new FluentValidator<{ [key: string]: T }>(name, async value => {
+    return new FluentValidator<Dict<T>>(name, async value => {
         const type = kindOf(value)
         if (type !== 'object') {
             return invalid({

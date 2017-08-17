@@ -4,7 +4,7 @@ export class FluentValidator<T> implements Validator<T> {
     constructor(
         public readonly name: string,
         public readonly validate: ValidateFn<T>) { }
-
+    
     and<U>(other: Validator<U>): FluentValidator<T & U> {
         const name = `${this.name} & ${other.name}`
         const v = async (value: any): Promise<ValidateResult<T & U>> => {
@@ -56,6 +56,6 @@ export class FluentValidator<T> implements Validator<T> {
     }
 
     get typeValue(): T {
-        return undefined as any
+        throw 'Do not call typeValue at runtime'
     }
 }

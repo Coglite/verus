@@ -72,6 +72,7 @@ exports[`Async should fail on invalid value 1`] = `
 Object {
   "errors": Object {
     "message": "is invalid!",
+    "name": "Async",
     "type": "async",
   },
   "message": "value failed async validation: \\"is invalid!\\"
@@ -107,7 +108,9 @@ Object {
     "name": "Dict(Number)",
     "type": "dict",
   },
-  "message": "",
+  "message": "Dict(Number)['world'] is the wrong type, expected number, got string
+Dict(Number)['bar'] is the wrong type, expected number, got date
+",
   "valid": false,
 }
 `;
@@ -252,6 +255,7 @@ Object {
   "errors": Object {
     "length": 3,
     "minLength": 4,
+    "name": "String",
     "type": "length",
   },
   "message": "value is too short, min length is 4, was 3
@@ -265,6 +269,7 @@ Object {
   "errors": Object {
     "length": 4,
     "maxLength": 3,
+    "name": "String",
     "type": "length",
   },
   "message": "value is too long, max length is 3, was 4
