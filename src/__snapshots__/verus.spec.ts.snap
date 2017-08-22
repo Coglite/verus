@@ -88,6 +88,27 @@ Object {
 }
 `;
 
+exports[`Constant should fail on invalid values 1`] = `
+Object {
+  "errors": Object {
+    "actual": "qwer",
+    "expected": "asdf",
+    "name": "Constant(asdf)",
+    "type": "constant",
+  },
+  "message": "value asdf is not expected constant qwer
+",
+  "valid": false,
+}
+`;
+
+exports[`Constant should succeed on valid value 1`] = `
+Object {
+  "valid": true,
+  "value": "asdf",
+}
+`;
+
 exports[`Dict should fail on invalid values 1`] = `
 Object {
   "errors": Object {

@@ -10,6 +10,7 @@ export type Errors =
     | LengthError
     | AsyncError
     | DictError
+    | ConstantError
 
 export interface ValueError {
     type: 'value'
@@ -82,6 +83,13 @@ export interface DictError {
     fields: { [key: string]: Errors }
 }
 
+export interface ConstantError {
+    type: 'constant',
+    name: string
+    expected: any
+    actual: any
+}
+
 export function errorMessage(errors: Errors): string {
     return joinLines(buildErrorMessage([], errors))
 }
@@ -142,6 +150,9 @@ function* buildErrorMessage(path: string[], errors: Errors): IterableIterator<st
             break
         case 'async':
             yield `${p} failed async validation: "${errors.message}"`
+            break
+        case 'constant':
+            yield `${p} ${errors.expected} is not expected constant ${errors.actual}`
             break
         case 'dict':
             for (const key of Object.keys(errors.fields)) {

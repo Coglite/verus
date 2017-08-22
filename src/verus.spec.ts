@@ -4,6 +4,7 @@ import { Invalid } from './common'
 import { Union } from './union'
 import { Async } from './async'
 import { Dict } from './dict'
+import { Constant } from './constant'
 
 class User extends Shape({
     name: String
@@ -186,6 +187,20 @@ describe('Dict', () => {
             foo: 435,
             bar: new Date()
         })
+        expect(r).toMatchSnapshot()
+    })
+})
+
+describe('Constant', () => {
+    it('should succeed on valid value', async () => {
+        const constant = Constant<'asdf'>('asdf')
+        const r = await constant.validate('asdf')
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should fail on invalid values', async () => {
+        const constant = Constant<'asdf'>('asdf')
+        const r = await constant.validate('qwer')
         expect(r).toMatchSnapshot()
     })
 })

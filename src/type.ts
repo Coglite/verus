@@ -19,6 +19,7 @@ export const Number = Type<number>('Number', 'number')
 export const Boolean = Type<boolean>('Boolean', 'boolean')
 export const Symbol = Type<symbol>('Symbol', 'symbol')
 export const Undefined = Type<undefined>('Undefined', 'undefined')
+export const Null = Type<null>('Null', 'null')
 export const Obj = Type<object>('Object', 'object')
 export const Func = Type<Function>('Function', 'function')
 
