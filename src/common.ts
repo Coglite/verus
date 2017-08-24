@@ -59,10 +59,13 @@ export function valid<T>(value: T): Valid<T> {
 }
 
 export type ValidateResult<T> = Valid<T> | Invalid<T>
-export type ValidateFn<T> = (value: any) => Promise<ValidateResult<T>>
+export interface ValidateFn<T> {
+    (value: any): Promise<ValidateResult<T>>
+}
 
 export interface Validator<T> {
     name: string;
+    reverse: (value: T) => any
     validate(value: any): Promise<ValidateResult<T>>
     or<U>(validator: Validator<U>): Validator<T|U>
     and<U>(validator: Validator<U>): Validator<T&U>

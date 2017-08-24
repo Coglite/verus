@@ -167,6 +167,43 @@ describe('Async', () => {
     })
 })
 
+class Kid extends Shape({
+    name: String,
+    birthDate: ISODate,
+}) {}
+
+class Relative extends Shape({
+    name: String,
+    birthDate: ISODate,
+    kids: ArrayOf(Kid)
+}) {}
+
+describe('Validator.reverse', () => {
+    it('should produce the same result before the validation', async () => {
+        const relative = {
+            name: 'Joan',
+            birthDate: '1982-08-24T17:26:59.226Z',
+            kids: [
+                {
+                    name: 'Jack',
+                    birthDate: '2007-08-24T17:26:59.226Z'
+                },
+                {
+                    name: 'Jill',
+                    birthDate: '2007-08-24T17:29:59.226Z'
+                }
+            ],
+            extra: 'extra data here'
+        }
+        const result = await Relative.validate(relative)
+        expect(result.valid).toBe(true)
+
+        if (!result.valid) throw ''
+        const reversed = Relative.reverse(result.value)
+        expect(reversed).toEqual(relative)
+    })
+})
+
 class Product extends Shape({
     name: String,
     price: Number,

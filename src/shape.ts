@@ -1,8 +1,8 @@
 import { Validator, ValidateResult, ValidateFn, invalid, valid } from './common'
 import { String, Number } from './type'
-import { ShapeErrors } from "./errors";
+import { ShapeErrors } from './errors'
 import * as kindOf from 'kind-of'
-import { FluentValidator } from "./fluent-validator";
+import { FluentValidator } from './fluent-validator'
 
 export type ShapeFields<T> = {
     [P in keyof T]: Validator<T[P]>
@@ -96,6 +96,19 @@ export function Shape<T>(fields: ShapeFields<T>, allowExtraFields = true): (new 
 
         static get typeValue(): T {
             return undefined as any
+        }
+
+        static reverse(value: T): any {
+            const o: any = {}
+            for (const key of Object.keys(fields)) {
+                const field = fields[key]
+                o[key] = field.reverse((value as any)[key])
+            }
+            const diff = difference(Object.keys(fields), Object.keys(value))
+            for (const key of diff) {
+                o[key] = (value as any)[key]
+            }
+            return o
         }
     }
     return Shape as any

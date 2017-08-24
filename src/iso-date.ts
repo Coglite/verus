@@ -18,4 +18,4 @@ export const ISODate = new FluentValidator<Date>('ISODate', async value => {
         })
     }
     return valid(date)
-})
+}, date => date.toISOString())

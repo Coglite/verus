@@ -3,7 +3,8 @@ import { Validator, ValidateFn, ValidateResult, invalid, valid } from './common'
 export class FluentValidator<T> implements Validator<T> {
     constructor(
         public readonly name: string,
-        public readonly validate: ValidateFn<T>) { }
+        public readonly validate: ValidateFn<T>,
+        public readonly reverse: (value: T) => any = v => v) { }
 
     and<U>(other: Validator<U>): FluentValidator<T & U> {
         const name = `${this.name} & ${other.name}`
