@@ -3,6 +3,8 @@ import { Shape } from './shape'
 import { Invalid } from './common'
 import { Union } from './union'
 import { Async } from './async'
+import { Dict } from './dict'
+import { Constant } from './constant'
 
 class User extends Shape({
     name: String
@@ -201,6 +203,42 @@ describe('Validator.reverse', () => {
         if (!result.valid) throw ''
         const reversed = Relative.reverse(result.value)
         expect(reversed).toEqual(relative)
+    })
+})
+
+describe('Dict', () => {
+    it('should succeed on valid value', async () => {
+        const stringDict = Dict(Number)
+        const r = await stringDict.validate({
+            hello: 324,
+            world: 123
+        })
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should fail on invalid values', async () => {
+        const stringDict = Dict(Number)
+        const r = await stringDict.validate({
+            hello: 324,
+            world: 'qwer',
+            foo: 435,
+            bar: new Date()
+        })
+        expect(r).toMatchSnapshot()
+    })
+})
+
+describe('Constant', () => {
+    it('should succeed on valid value', async () => {
+        const constant = Constant<'asdf'>('asdf')
+        const r = await constant.validate('asdf')
+        expect(r).toMatchSnapshot()
+    })
+
+    it('should fail on invalid values', async () => {
+        const constant = Constant<'asdf'>('asdf')
+        const r = await constant.validate('qwer')
+        expect(r).toMatchSnapshot()
     })
 })
 

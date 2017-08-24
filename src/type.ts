@@ -19,6 +19,7 @@ export const Number = Type<number>('Number', 'number')
 export const Boolean = Type<boolean>('Boolean', 'boolean')
 export const Symbol = Type<symbol>('Symbol', 'symbol')
 export const Undefined = Type<undefined>('Undefined', 'undefined')
+export const Null = Type<null>('Null', 'null')
 export const Obj = Type<object>('Object', 'object')
 export const Func = Type<Function>('Function', 'function')
 
@@ -43,12 +44,14 @@ export class StringValidator extends FluentValidator<string> {
             if (this.options.minLength && s.length < this.options.minLength) {
                 return invalid({
                     type: 'length',
+                    name: 'String',
                     length: s.length,
                     minLength: options.minLength
                 })
             } else if (this.options.maxLength && s.length > this.options.maxLength) {
                 return invalid({
                     type: 'length',
+                    name: 'String',
                     length: s.length,
                     maxLength: options.maxLength
                 })

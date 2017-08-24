@@ -9,6 +9,8 @@ export type Errors =
     | ValueError
     | LengthError
     | AsyncError
+    | DictError
+    | ConstantError
 
 export interface ValueError {
     type: 'value'
@@ -42,7 +44,7 @@ export interface TypeError {
     name: string
     expected: string
     actual: string
-}
+    }
 
 export interface ArrayErrors {
     type: 'array'
@@ -63,6 +65,7 @@ export interface UnionError {
 
 export interface LengthError {
     type: 'length'
+    name: string
     length: number
     minLength?: number
     maxLength?: number
@@ -70,7 +73,21 @@ export interface LengthError {
 
 export interface AsyncError {
     type: 'async'
+    name: string
     message: string
+}
+
+export interface DictError {
+    type: 'dict',
+    name: string
+    fields: { [key: string]: Errors }
+}
+
+export interface ConstantError {
+    type: 'constant',
+    name: string
+    expected: any
+    actual: any
 }
 
 export function errorMessage(errors: Errors): string {
@@ -134,6 +151,15 @@ function* buildErrorMessage(path: string[], errors: Errors): IterableIterator<st
         case 'async':
             yield `${p} failed async validation: "${errors.message}"`
             break
+        case 'constant':
+            yield `${p} ${errors.expected} is not expected constant ${errors.actual}`
+            break
+        case 'dict':
+            for (const key of Object.keys(errors.fields)) {
+                const keyIndexStr = `['${key}']`
+                const p = path.length > 0 ? path.concat([keyIndexStr]) : [errors.name, keyIndexStr]
+                yield* iterableToArray(buildErrorMessage(p, errors.fields[key]))
+            }
     }
 }
 

@@ -72,6 +72,7 @@ exports[`Async should fail on invalid value 1`] = `
 Object {
   "errors": Object {
     "message": "is invalid!",
+    "name": "Async",
     "type": "async",
   },
   "message": "value failed async validation: \\"is invalid!\\"
@@ -84,6 +85,64 @@ exports[`Async should succeed on valid value 1`] = `
 Object {
   "valid": true,
   "value": true,
+}
+`;
+
+exports[`Constant should fail on invalid values 1`] = `
+Object {
+  "errors": Object {
+    "actual": "qwer",
+    "expected": "asdf",
+    "name": "Constant(asdf)",
+    "type": "constant",
+  },
+  "message": "value asdf is not expected constant qwer
+",
+  "valid": false,
+}
+`;
+
+exports[`Constant should succeed on valid value 1`] = `
+Object {
+  "valid": true,
+  "value": "asdf",
+}
+`;
+
+exports[`Dict should fail on invalid values 1`] = `
+Object {
+  "errors": Object {
+    "fields": Object {
+      "bar": Object {
+        "actual": "date",
+        "expected": "number",
+        "name": "Number",
+        "type": "type",
+      },
+      "world": Object {
+        "actual": "string",
+        "expected": "number",
+        "name": "Number",
+        "type": "type",
+      },
+    },
+    "name": "Dict(Number)",
+    "type": "dict",
+  },
+  "message": "Dict(Number)['world'] is the wrong type, expected number, got string
+Dict(Number)['bar'] is the wrong type, expected number, got date
+",
+  "valid": false,
+}
+`;
+
+exports[`Dict should succeed on valid value 1`] = `
+Object {
+  "valid": true,
+  "value": Object {
+    "hello": 324,
+    "world": 123,
+  },
 }
 `;
 
@@ -217,6 +276,7 @@ Object {
   "errors": Object {
     "length": 3,
     "minLength": 4,
+    "name": "String",
     "type": "length",
   },
   "message": "value is too short, min length is 4, was 3
@@ -230,6 +290,7 @@ Object {
   "errors": Object {
     "length": 4,
     "maxLength": 3,
+    "name": "String",
     "type": "length",
   },
   "message": "value is too long, max length is 3, was 4

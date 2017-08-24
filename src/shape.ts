@@ -8,7 +8,11 @@ export type ShapeFields<T> = {
     [P in keyof T]: Validator<T[P]>
 }
 
-export function Shape<T>(fields: ShapeFields<T>, allowExtraFields = true): (new () => T) & Validator<T> & { tv: T } {
+export interface ShapeClass<T> extends Validator<T> {
+    new (): T
+}
+
+export function Shape<T>(fields: ShapeFields<T>, allowExtraFields = true): ShapeClass<T> {
     class Shape {
         static async validate(value: any): Promise<ValidateResult<T>> {
             const o: Partial<T> = new this() as any
@@ -95,7 +99,7 @@ export function Shape<T>(fields: ShapeFields<T>, allowExtraFields = true): (new 
         }
 
         static get typeValue(): T {
-            return undefined as any
+            throw 'Do not call typeValue at runtime'
         }
 
         static reverse(value: T): any {

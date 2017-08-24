@@ -9,6 +9,7 @@ export const Async = <T>(handler: (value: any) => Promise<T>) => new FluentValid
         const message = '' + error
         return invalid({
             type: 'async',
+            name: 'Async',
             message
         })
     }

@@ -57,6 +57,6 @@ export class FluentValidator<T> implements Validator<T> {
     }
 
     get typeValue(): T {
-        return undefined as any
+        throw 'Do not call typeValue at runtime'
     }
 }
