@@ -217,7 +217,7 @@ describe('Validator.reverse', () => {
     expect(result.valid).toBe(true)
 
     if (!result.valid) throw ''
-    const reversed = Relative.reverse(result.value)
+    const reversed = await Relative.reverse(result.value)
     expect(reversed).toEqual(relative)
   })
 })

@@ -21,5 +21,5 @@ export const ISODate = new FluentValidator<Date>(
     }
     return valid(date)
   },
-  date => date.toISOString()
+  async date => date.toISOString()
 )

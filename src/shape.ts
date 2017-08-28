@@ -103,11 +103,11 @@ export function Shape<T>(
       throw 'Do not call typeValue at runtime'
     }
 
-    static reverse(value: T): any {
+    static async reverse(value: T): Promise<any> {
       const o: any = {}
       for (const key of Object.keys(fields)) {
         const field = fields[key]
-        o[key] = field.reverse((value as any)[key])
+        o[key] = await field.reverse((value as any)[key])
       }
       const diff = difference(Object.keys(fields), Object.keys(value))
       for (const key of diff) {

@@ -32,7 +32,9 @@ export function ArrayOf<T>(validator: Validator<T>): FluentValidator<T[]> {
     return valid(validatedArr)
   }
 
-  return new FluentValidator<T[]>(name, v, value =>
-    value.map(v => validator.reverse(v))
+  return new FluentValidator<T[]>(
+    name,
+    v,
+    async value => await Promise.all(value.map(v => validator.reverse(v)))
   )
 }
